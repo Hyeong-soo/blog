@@ -25,19 +25,27 @@ export default function JournalCard({ journal }) {
     };
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition">
-            <div className="flex justify-between items-start mb-2">
-                <h3 className="text-xl font-semibold">{journal.title}</h3>
+        <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition relative group">
+            {/* Overlay Link for the entire card */}
+            <Link href={`/journal/${journal.id}`} className="absolute inset-0 z-0" prefetch={false}>
+                <span className="sr-only">상세보기</span>
+            </Link>
+
+            <div className="flex justify-between items-start mb-2 relative z-10 pointer-events-none">
+                <h3 className="text-xl font-semibold group-hover:text-blue-600 transition pointer-events-auto">
+                    {journal.title}
+                </h3>
                 <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-500">
                     {new Date(journal.created_at).toLocaleDateString()}
                 </span>
             </div>
-            <p className="text-gray-600 line-clamp-2 mb-4">
+
+            <p className="text-gray-600 line-clamp-2 mb-4 relative z-10 pointer-events-none">
                 {journal.content}
             </p>
 
-            <div className="flex justify-between items-center mt-4">
-                <span className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">#Daily</span>
+            <div className="flex justify-between items-center mt-4 relative z-10">
+                <span className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded pointer-events-none">#Daily</span>
 
                 <div className="flex gap-2 text-sm">
                     <Link
