@@ -19,17 +19,17 @@ export function SiteHeader() {
     const pathname = usePathname()
 
     return (
-        <header className="border-b border-border/40 bg-background/80 backdrop-blur-md sticky top-0 z-10">
+        <header className="bg-primary text-primary-foreground sticky top-0 z-10">
             <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                 <div className="mr-8 flex items-center">
-                    <Link href="/" className="text-xl font-bold tracking-tight text-foreground mr-6">
+                    <Link href="/" className="text-xl font-bold tracking-tight mr-6">
                         Intern Journal
                     </Link>
 
                     <NavigationMenu>
                         <NavigationMenuList>
                             <NavigationMenuItem>
-                                <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "bg-transparent hover:bg-transparent focus:bg-transparent", pathname === "/" ? "text-foreground font-semibold" : "text-muted-foreground")}>
+                                <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "bg-transparent hover:bg-transparent focus:bg-transparent hover:text-primary-foreground focus:text-primary-foreground", pathname === "/" ? "text-primary-foreground font-semibold" : "text-primary-foreground/60")}>
                                     <Link href="/">
                                         홈
                                     </Link>

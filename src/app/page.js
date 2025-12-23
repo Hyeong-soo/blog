@@ -21,9 +21,9 @@ export default async function Home() {
     <div className="space-y-6">
       <section className="flex items-center justify-between">
         <h2 className="text-3xl font-bold">오늘의 기록</h2>
-        <Button asChild>
+        <Button variant="default" size="sm" asChild>
           <Link href="/write">
-            + 새 기록 작성
+            일기쓰기
           </Link>
         </Button>
       </section>

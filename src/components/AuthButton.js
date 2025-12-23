@@ -38,10 +38,11 @@ export default function AuthButton() {
     if (user) {
         return (
             <div className="flex items-center gap-4">
-                <span className="text-sm font-medium text-foreground hidden sm:inline">{user.email}</span>
+                <span className="text-sm font-medium hidden sm:inline">{user.email}</span>
                 <Button
                     variant="ghost"
                     size="sm"
+                    className="hover:text-primary-foreground/80"
                     onClick={handleLogout}
                 >
                     로그아웃
@@ -51,7 +52,7 @@ export default function AuthButton() {
     }
 
     return (
-        <Button variant="ghost" size="sm" asChild>
+        <Button variant="ghost" size="sm" asChild className="hover:text-primary-foreground/80">
             <Link href="/login">
                 로그인
             </Link>
