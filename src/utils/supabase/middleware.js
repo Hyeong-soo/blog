@@ -37,6 +37,17 @@ export async function updateSession(request) {
         data: { user },
     } = await supabase.auth.getUser()
 
+    if (user && request.nextUrl.pathname.startsWith('/login')) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/'
+        const redirectResponse = NextResponse.redirect(url)
+        const allCookies = supabaseResponse.cookies.getAll()
+        allCookies.forEach(cookie => {
+            redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
+        })
+        return redirectResponse
+    }
+
     if (
         !user &&
         !request.nextUrl.pathname.startsWith('/login') &&

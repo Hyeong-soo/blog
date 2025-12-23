@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -31,40 +34,38 @@ export default function LoginPage() {
 
     return (
         <div className="max-w-md mx-auto mt-20">
-            <div className="bg-white p-8 rounded-lg shadow-md border">
-                <h2 className="text-2xl font-bold mb-6 text-center">로그인</h2>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-2xl text-center">로그인</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleLogin} className="space-y-4">
+                        <div className="space-y-2">
+                            <label htmlFor="email" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                이메일 주소
+                            </label>
+                            <Input
+                                id="email"
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="your@email.com"
+                                required
+                            />
+                        </div>
 
-                <form onSubmit={handleLogin} className="space-y-4">
-                    <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                            이메일 주소
-                        </label>
-                        <input
-                            id="email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="your@email.com"
-                            required
-                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                        />
-                    </div>
+                        <Button type="submit" className="w-full" disabled={loading}>
+                            {loading ? '전송 중...' : '매직 링크 보내기'}
+                        </Button>
+                    </form>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition disabled:opacity-50"
-                    >
-                        {loading ? '전송 중...' : '매직 링크 보내기'}
-                    </button>
-                </form>
-
-                {message && (
-                    <div className={`mt-4 p-3 rounded text-sm ${message.includes('에러') ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
-                        {message}
-                    </div>
-                )}
-            </div>
+                    {message && (
+                        <div className={`mt-4 p-3 rounded text-sm ${message.includes('에러') ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
+                            {message}
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
         </div>
     );
 }

@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
+import JournalCard from '@/components/JournalCard';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,21 +31,7 @@ export default async function Home() {
       <div className="grid gap-4">
         {journals && journals.length > 0 ? (
           journals.map((journal) => (
-            <div key={journal.id} className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="text-xl font-semibold">{journal.title}</h3>
-                <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-500">
-                  {new Date(journal.created_at).toLocaleDateString()}
-                </span>
-              </div>
-              <p className="text-gray-600 line-clamp-2">
-                {journal.content}
-              </p>
-              <div className="mt-4 flex gap-2">
-                {/* Tags are not in schema yet, using static placeholder or removing */}
-                <span className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">#Daily</span>
-              </div>
-            </div>
+            <JournalCard key={journal.id} journal={journal} />
           ))
         ) : (
           <div className="bg-white p-6 rounded-lg shadow-sm border text-center py-12 text-gray-400">
