@@ -12,6 +12,8 @@ export default async function Home() {
     .select('*')
     .order('created_at', { ascending: false });
 
+  const { data: { user } } = await supabase.auth.getUser();
+
   if (error) {
     console.error('Error fetching journals:', error);
     return <div className="text-red-500">일지를 불러오는데 실패했습니다.</div>;
@@ -21,11 +23,13 @@ export default async function Home() {
     <div className="space-y-6">
       <section className="flex items-center justify-between">
         <h2 className="text-3xl font-bold">오늘의 기록</h2>
-        <Button variant="default" size="sm" asChild>
-          <Link href="/write">
-            일기쓰기
-          </Link>
-        </Button>
+        {user && (
+          <Button variant="default" size="sm" asChild>
+            <Link href="/write">
+              일기쓰기
+            </Link>
+          </Button>
+        )}
       </section>
 
       <div className="grid gap-4">
