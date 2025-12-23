@@ -2,6 +2,8 @@
 
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Trash2 } from 'lucide-react';
 
 export default function DeleteJournalButton({ journalId }) {
     const router = useRouter();
@@ -26,11 +28,13 @@ export default function DeleteJournalButton({ journalId }) {
     };
 
     return (
-        <button
+        <Button
             onClick={handleDelete}
-            className="text-red-400 hover:text-red-600 transition"
+            variant="ghost"
+            size="icon-sm"
+            aria-label="삭제"
         >
-            삭제
-        </button>
+            <Trash2 className="h-4 w-4" />
+        </Button>
     );
 }

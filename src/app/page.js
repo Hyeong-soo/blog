@@ -1,6 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 import JournalCard from '@/components/JournalCard';
+import { Button } from '@/components/ui/button';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,12 +21,11 @@ export default async function Home() {
     <div className="space-y-6">
       <section className="flex items-center justify-between">
         <h2 className="text-3xl font-bold">오늘의 기록</h2>
-        <Link
-          href="/write"
-          className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition text-sm font-medium"
-        >
-          + 새 기록 작성
-        </Link>
+        <Button asChild>
+          <Link href="/write">
+            + 새 기록 작성
+          </Link>
+        </Button>
       </section>
 
       <div className="grid gap-4">

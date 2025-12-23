@@ -1,6 +1,18 @@
 import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 import DeleteJournalButton from '@/components/DeleteJournalButton';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import { ArrowLeft, Edit } from 'lucide-react'; // Assuming lucide-react is available as it's default for shadcn
 
 export const dynamic = 'force-dynamic';
 
@@ -16,46 +28,69 @@ export default async function JournalDetailPage({ params }) {
 
     if (error || !journal) {
         return (
-            <div className="container mx-auto px-4 py-8 text-center">
+            <div className="container mx-auto px-4 py-8 text-center mt-20">
                 <h1 className="text-2xl font-bold mb-4">일지를 찾을 수 없습니다.</h1>
-                <Link href="/" className="text-blue-500 hover:underline">
-                    홈으로 돌아가기
-                </Link>
+                <Button asChild>
+                    <Link href="/">
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        홈으로 돌아가기
+                    </Link>
+                </Button>
             </div>
         );
     }
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6">
-            <div className="flex items-center justify-between mb-6">
-                <Link href="/" className="text-sm text-gray-500 hover:text-black transition">
-                    ← 뒤로 가기
-                </Link>
-                <div className="flex gap-2 text-sm">
-                    <Link
-                        href={`/edit/${journal.id}`}
-                        className="text-gray-500 hover:text-black transition"
-                    >
-                        수정
+        <div className="max-w-3xl mx-auto space-y-6 pt-10 pb-20">
+            {/* Header / Nav */}
+            <div className="flex items-center justify-between">
+                <Button variant="ghost-flush" asChild>
+                    <Link href="/">
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        목록으로
                     </Link>
+                </Button>
+
+                <div className="flex gap-2">
+                    <Button variant="ghost" size="icon-sm" asChild>
+                        <Link href={`/edit/${journal.id}`} aria-label="수정">
+                            <Edit className="h-4 w-4" />
+                        </Link>
+                    </Button>
                     <DeleteJournalButton journalId={journal.id} />
                 </div>
             </div>
 
-            <article className="bg-white p-8 rounded-lg shadow-sm border">
-                <header className="mb-6 pb-6 border-b">
-                    <h1 className="text-3xl font-bold mb-3">{journal.title}</h1>
-                    <div className="flex items-center text-gray-500 text-sm">
-                        <span>{new Date(journal.created_at).toLocaleDateString()}</span>
-                        <span className="mx-2">•</span>
-                        <span className="text-blue-600 bg-blue-50 px-2 py-1 rounded text-xs">#Daily</span>
+            {/* Main Content Card */}
+            <Card className="shadow-lg">
+                <CardHeader className="space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <CardTitle className="text-3xl font-bold leading-tight">
+                            {journal.title}
+                        </CardTitle>
+                        <Badge variant="default" className="w-fit text-sm px-3 py-1">
+                            Daily
+                        </Badge>
                     </div>
-                </header>
+                    <CardDescription className="text-base text-muted-foreground">
+                        {new Date(journal.created_at).toLocaleDateString()} • {new Date(journal.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </CardDescription>
+                </CardHeader>
 
-                <div className="prose prose-slate max-w-none whitespace-pre-wrap text-gray-800 leading-relaxed">
-                    {journal.content}
-                </div>
-            </article>
+                <Separator />
+
+                <CardContent className="pt-8">
+                    <div className="prose prose-slate max-w-none whitespace-pre-wrap text-foreground leading-relaxed dark:prose-invert">
+                        {journal.content}
+                    </div>
+                </CardContent>
+
+                <CardFooter className="bg-background mt-5 mb-0 mx-6 p-0 rounded-b-xl flex justify-between items-center text-sm text-muted-foreground">
+                    <span>작성일: {new Date(journal.created_at).toLocaleDateString()}</span>
+                    {/* Placeholder for future features like 'word count' or 'views' */}
+                    <span>기록 완료</span>
+                </CardFooter>
+            </Card>
         </div>
     );
 }
