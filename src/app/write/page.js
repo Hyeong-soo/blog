@@ -11,6 +11,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Send, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message";
 
 export default function WritePage() {
     // Editor State
@@ -24,12 +25,50 @@ export default function WritePage() {
 
     // Chat State (Vercel AI SDK)
     const [conversationId] = useState(() => crypto.randomUUID());
+    const [input, setInput] = useState('');
 
-    const { messages, input, handleInputChange, handleSubmit: handleChatSubmit, isLoading: isChatLoading, setMessages } = useChat({
+    const chatHelpers = useChat({
         api: '/api/chat',
         body: { conversationId },
         initialMessages: [],
+        onResponse: (response) => {
+            console.log('Chat Response Status:', response.status);
+            console.log('Chat Response Headers:', Object.fromEntries(response.headers.entries()));
+
+            // Debug: Log full response body (cloned to avoid consuming original stream)
+            response.clone().text().then(text => {
+                console.log('Chat Response Body:', text);
+            }).catch(err => {
+                console.error('Error reading response body:', err);
+            });
+        },
+        onFinish: (message) => {
+            console.log('Chat Finished:', message);
+        },
+        onError: (error) => {
+            console.error('Chat Error:', error);
+        }
     });
+
+    const { messages, sendMessage, isLoading: isChatLoading, setMessages } = chatHelpers;
+
+    const handleInputChange = (e) => {
+        setInput(e.target.value);
+    };
+
+    const handleChatSubmit = async (e) => {
+        e.preventDefault();
+        if (!input.trim()) return;
+
+        const content = input;
+        setInput('');
+
+        try {
+            await sendMessage({ role: 'user', content });
+        } catch (error) {
+            console.error('Failed to send message:', error);
+        }
+    };
 
     // Load conversation history on mount (optional)
     useEffect(() => {
@@ -103,7 +142,7 @@ export default function WritePage() {
                     <Card className="h-full flex flex-col border-primary/20 shadow-lg">
                         <CardHeader className="bg-muted/50 pb-3">
                             <CardTitle className="text-xl flex items-center gap-2">
-                                <span>🤖 AI 글쓰기 코치</span>
+                                <span>오늘 뭐 했는지 알려주세요</span>
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
@@ -112,19 +151,21 @@ export default function WritePage() {
                                 {messages.length === 0 && (
                                     <div className="text-center text-muted-foreground mt-10">
                                         <p>일기 쓰는 것을 도와드릴까요?</p>
-                                        <p className="text-sm mt-2">"오늘 있었던 일을 요약해줘"<br />"썸네일 이미지를 만들어줘"</p>
+                                        <p className="text-sm mt-2">"웹 개발 방법론을 학습했어."<br />"AI 에이전트 개념을 배웠어"</p>
                                     </div>
                                 )}
                                 <div className="space-y-4">
                                     {messages.map(m => (
-                                        <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                            <div className={`max-w-[85%] rounded-lg p-3 ${m.role === 'user'
-                                                ? 'bg-primary text-primary-foreground'
-                                                : 'bg-muted'
-                                                }`}>
+                                        <Message key={m.id} from={m.role}>
+                                            <MessageContent>
                                                 {m.content && !m.content.startsWith('http') && (
-                                                    <div className="whitespace-pre-wrap text-sm">{m.content}</div>
+                                                    <MessageResponse>{m.content}</MessageResponse>
                                                 )}
+                                                {!m.content && m.parts && m.parts.map((part, i) => (
+                                                    part.type === 'text' && (
+                                                        <MessageResponse key={i}>{part.text}</MessageResponse>
+                                                    )
+                                                ))}
 
                                                 {m.toolInvocations?.map(toolInvocation => {
                                                     const { toolName, toolCallId, state } = toolInvocation;
@@ -158,15 +199,18 @@ export default function WritePage() {
                                                         </div>
                                                     );
                                                 })}
-                                            </div>
-                                        </div>
+                                            </MessageContent>
+                                        </Message>
                                     ))}
                                 </div>
                             </ScrollArea>
 
                             {/* Input Area */}
                             <div className="p-4 border-t bg-background">
-                                <form onSubmit={handleChatSubmit} className="flex gap-2">
+                                <form
+                                    onSubmit={handleChatSubmit}
+                                    className="flex gap-2"
+                                >
                                     <Input
                                         value={input}
                                         onChange={handleInputChange}

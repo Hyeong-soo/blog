@@ -12,6 +12,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message";
 import { ArrowLeft, Edit } from 'lucide-react'; // Assuming lucide-react is available as it's default for shadcn
 
 export const dynamic = 'force-dynamic';
@@ -80,8 +81,12 @@ export default async function JournalDetailPage({ params }) {
                 <Separator />
 
                 <CardContent className="pt-8">
-                    <div className="prose prose-slate max-w-none whitespace-pre-wrap text-foreground leading-relaxed dark:prose-invert">
-                        {journal.content}
+                    <div className="w-full">
+                        <Message from="assistant">
+                            <MessageContent className="w-full max-w-none bg-transparent p-0 dark:bg-transparent text-foreground">
+                                <MessageResponse>{journal.content}</MessageResponse>
+                            </MessageContent>
+                        </Message>
                     </div>
                 </CardContent>
 
