@@ -42,12 +42,12 @@ export default function JournalCard({ journal }) {
                 <span className="sr-only">상세보기</span>
             </Link>
 
-            <Card className="group-hover:shadow-lg transition-all relative z-10 pointer-events-none bg-card border-border flex flex-col md:flex-row overflow-hidden h-full md:h-52 p-0 gap-0">
+            <Card className="group-hover:shadow-lg transition-all relative z-10 pointer-events-none bg-card border-border flex flex-col md:flex-row overflow-hidden h-full md:min-h-52 p-0 gap-0">
                 {/* Image Section - 40% width on desktop */}
-                <div className="relative w-full md:w-2/5 h-48 md:h-auto bg-muted">
+                <div className="relative w-full md:w-2/5 aspect-video md:aspect-auto bg-muted">
                     <Image
-                        src={`https://picsum.photos/seed/${journal.id}/800/600`}
-                        alt="Journal cover"
+                        src={journal.thumbnail_url || `https://picsum.photos/seed/${journal.id}/800/600`}
+                        alt={journal.title}
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 100vw, 40vw"
@@ -64,7 +64,7 @@ export default function JournalCard({ journal }) {
 
                     <CardContent className="px-6 flex-grow">
                         <p className="text-muted-foreground line-clamp-3 text-base leading-relaxed">
-                            {journal.content}
+                            {journal.content?.replace(/<[^>]*>/g, '')}
                         </p>
                     </CardContent>
 

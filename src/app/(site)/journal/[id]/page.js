@@ -12,7 +12,9 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message";
+import TiptapViewer from '@/components/editor/tiptap-viewer';
+
+
 import { ArrowLeft, Edit } from 'lucide-react'; // Assuming lucide-react is available as it's default for shadcn
 
 export const dynamic = 'force-dynamic';
@@ -78,15 +80,17 @@ export default async function JournalDetailPage({ params }) {
                     </CardDescription>
                 </CardHeader>
 
+                {journal.thumbnail_url && (
+                    <div className="w-full aspect-video relative overflow-hidden border-b">
+                        <img src={journal.thumbnail_url} alt={journal.title} className="w-full h-full object-cover" />
+                    </div>
+                )}
+
                 <Separator />
 
                 <CardContent className="pt-8">
                     <div className="w-full">
-                        <Message from="assistant">
-                            <MessageContent className="w-full max-w-none bg-transparent p-0 dark:bg-transparent text-foreground">
-                                <MessageResponse>{journal.content}</MessageResponse>
-                            </MessageContent>
-                        </Message>
+                        <TiptapViewer content={journal.content} />
                     </div>
                 </CardContent>
 
