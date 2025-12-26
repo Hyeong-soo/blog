@@ -373,7 +373,8 @@ ${commitsSummary}
     // Add beforeunload handler
     useEffect(() => {
         const handleBeforeUnload = (e) => {
-            if (content.trim() && !isSaved) {
+            // Warn if there's content OR chat messages (unsaved work)
+            if ((content.trim() || messages.length > 0) && !isSaved) {
                 e.preventDefault();
                 e.returnValue = '';
             }
@@ -381,7 +382,7 @@ ${commitsSummary}
 
         window.addEventListener('beforeunload', handleBeforeUnload);
         return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-    }, [content, isSaved]);
+    }, [content, messages.length, isSaved]);
 
     const handleSave = async () => {
         if (!title.trim() && !content.trim()) {
@@ -462,7 +463,8 @@ ${commitsSummary}
     };
 
     const handleCancel = () => {
-        if (content.trim() && !isSaved) {
+        // Show dialog if there's content OR chat messages (unsaved work)
+        if ((content.trim() || messages.length > 0) && !isSaved) {
             setShowLeaveDialog(true);
         } else {
             router.back();
