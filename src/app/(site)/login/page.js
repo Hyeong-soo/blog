@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
-export default function LoginPage() {
+function LoginForm() {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
@@ -75,5 +75,27 @@ export default function LoginPage() {
                 </CardContent>
             </Card>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={
+            <div className="max-w-md mx-auto mt-20">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-2xl text-center">로그인</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="animate-pulse space-y-4">
+                            <div className="h-10 bg-muted rounded"></div>
+                            <div className="h-10 bg-muted rounded"></div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        }>
+            <LoginForm />
+        </Suspense>
     );
 }
