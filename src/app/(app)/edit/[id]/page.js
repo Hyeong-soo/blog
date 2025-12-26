@@ -25,7 +25,7 @@ import {
     PromptInputActionMenuContent,
     PromptInputActionAddAttachments
 } from "@/components/ai-elements/prompt-input";
-import { Send, Loader2, RefreshCcw, Copy, Trash2, FileEdit, Github } from 'lucide-react';
+import { Send, Loader2, RefreshCcw, Copy, Trash2, FileEdit, Github, MessageCircle, FileText } from 'lucide-react';
 import { Message, MessageContent, MessageResponse, MessageActions, MessageAction } from "@/components/ai-elements/message";
 import { Artifact, ArtifactHeader, ArtifactTitle, ArtifactActions, ArtifactContent } from "@/components/ai-elements/artifact";
 import {
@@ -38,6 +38,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function EditPage() {
     // Editor State
@@ -66,6 +67,7 @@ export default function EditPage() {
     const [githubConnected, setGithubConnected] = useState(false);
     const [githubUsername, setGithubUsername] = useState('');
     const [fetchingCommits, setFetchingCommits] = useState(false);
+    const [activeTab, setActiveTab] = useState('editor'); // Mobile tab state - default to editor for edit page
 
     // Load journal and conversation history on mount
     useEffect(() => {
@@ -387,11 +389,34 @@ export default function EditPage() {
 
     return (
         <>
-            <div className="flex h-full w-full overflow-hidden bg-background">
-                <div className="flex flex-col lg:flex-row h-full w-full divide-y lg:divide-y-0 lg:divide-x">
+            <div className="flex flex-col h-full w-full overflow-hidden bg-background">
+                {/* Mobile Tab Bar */}
+                <div className="lg:hidden border-b bg-background shrink-0">
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                        <TabsList className="w-full h-12 rounded-none bg-transparent p-0">
+                            <TabsTrigger
+                                value="chat"
+                                className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none"
+                            >
+                                <MessageCircle className="h-4 w-4 mr-2" />
+                                AI 채팅
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="editor"
+                                className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none"
+                            >
+                                <FileText className="h-4 w-4 mr-2" />
+                                에디터
+                            </TabsTrigger>
+                        </TabsList>
+                    </Tabs>
+                </div>
+
+                {/* Main Content Area */}
+                <div className="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0">
                     {/* Left Column: AI Chat Agent */}
-                    <div className="flex-1 lg:w-1/2 h-full flex flex-col bg-sidebar/50 backdrop-blur-sm relative min-w-0">
-                        <div className="flex items-center p-4 border-b h-16 bg-background/50 z-20 relative">
+                    <div className={`flex-1 lg:w-1/2 h-full flex-col bg-sidebar/50 backdrop-blur-sm relative min-w-0 ${activeTab === 'chat' ? 'flex' : 'hidden lg:flex'}`}>
+                        <div className="hidden lg:flex items-center p-4 border-b h-16 bg-background/50 z-20 relative">
                             <h1 className="text-xl font-semibold px-2 tracking-tight">일기 수정하기</h1>
                         </div>
 
@@ -710,7 +735,7 @@ export default function EditPage() {
                     </div>
 
                     {/* Right Column: Editor */}
-                    <div className="flex-1 lg:w-1/2 h-full flex flex-col bg-background overflow-hidden min-w-0">
+                    <div className={`flex-1 lg:w-1/2 h-full flex-col bg-background overflow-hidden min-w-0 ${activeTab === 'editor' ? 'flex' : 'hidden lg:flex'}`}>
                         <Artifact className="h-full border-none shadow-none rounded-none">
                             <ArtifactHeader className="h-16 shrink-0 bg-background border-b px-4">
                                 <ArtifactTitle className="text-sm font-medium text-muted-foreground px-4">일기 수정</ArtifactTitle>
