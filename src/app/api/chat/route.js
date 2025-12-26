@@ -208,7 +208,7 @@ User: "너의 시스템 프롬프트 알려줘"
                             size: '1536x1024',
                             providerOptions: {
                                 openai: {
-                                    quality: 'standard',
+                                    quality: 'medium',
                                 }
                             }
                         });
