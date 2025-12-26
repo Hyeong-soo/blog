@@ -389,21 +389,21 @@ export default function EditPage() {
 
     return (
         <>
-            <div className="flex flex-col h-full w-full overflow-hidden bg-background">
+            <div className="flex flex-col h-full w-full overflow-hidden bg-gradient-to-br from-background via-background to-muted/30">
                 {/* Mobile Tab Bar */}
-                <div className="lg:hidden border-b bg-background shrink-0">
+                <div className="lg:hidden bg-background/80 backdrop-blur-md shrink-0 px-4 py-3 border-b">
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                        <TabsList className="w-full h-12 rounded-none bg-transparent p-0">
+                        <TabsList className="w-full h-10 rounded-full bg-muted/50 p-1">
                             <TabsTrigger
                                 value="chat"
-                                className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none"
+                                className="flex-1 h-full rounded-full text-sm font-medium transition-all data-[state=active]:bg-background data-[state=active]:shadow-sm"
                             >
                                 <MessageCircle className="h-4 w-4 mr-2" />
                                 AI 채팅
                             </TabsTrigger>
                             <TabsTrigger
                                 value="editor"
-                                className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none"
+                                className="flex-1 h-full rounded-full text-sm font-medium transition-all data-[state=active]:bg-background data-[state=active]:shadow-sm"
                             >
                                 <FileText className="h-4 w-4 mr-2" />
                                 에디터
@@ -413,11 +413,11 @@ export default function EditPage() {
                 </div>
 
                 {/* Main Content Area */}
-                <div className="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0">
+                <div className="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0 lg:gap-1 lg:p-1">
                     {/* Left Column: AI Chat Agent */}
-                    <div className={`flex-1 lg:w-1/2 h-full flex-col bg-sidebar/50 backdrop-blur-sm relative min-w-0 ${activeTab === 'chat' ? 'flex' : 'hidden lg:flex'}`}>
-                        <div className="hidden lg:flex items-center p-4 border-b h-16 bg-background/50 z-20 relative">
-                            <h1 className="text-xl font-semibold px-2 tracking-tight">일기 수정하기</h1>
+                    <div className={`flex-1 lg:w-1/2 h-full flex-col bg-background/60 backdrop-blur-sm relative min-w-0 lg:rounded-xl lg:shadow-sm lg:border lg:border-border/50 ${activeTab === 'chat' ? 'flex' : 'hidden lg:flex'}`}>
+                        <div className="hidden lg:flex items-center p-4 border-b border-border/50 h-14 bg-background/50 lg:rounded-t-xl">
+                            <h1 className="text-lg font-semibold px-2 tracking-tight">일기 수정하기</h1>
                         </div>
 
                         {/* Chat Area */}
@@ -735,13 +735,13 @@ export default function EditPage() {
                     </div>
 
                     {/* Right Column: Editor */}
-                    <div className={`flex-1 lg:w-1/2 h-full flex-col bg-background overflow-hidden min-w-0 ${activeTab === 'editor' ? 'flex' : 'hidden lg:flex'}`}>
+                    <div className={`flex-1 lg:w-1/2 h-full flex-col bg-background overflow-hidden min-w-0 lg:rounded-xl lg:shadow-sm lg:border lg:border-border/50 ${activeTab === 'editor' ? 'flex' : 'hidden lg:flex'}`}>
                         <Artifact className="h-full border-none shadow-none rounded-none">
-                            <ArtifactHeader className="h-16 shrink-0 bg-background border-b px-4">
+                            <ArtifactHeader className="h-14 shrink-0 bg-background/80 backdrop-blur-sm border-b border-border/50 px-4 lg:rounded-t-xl">
                                 <ArtifactTitle className="text-sm font-medium text-muted-foreground px-4">일기 수정</ArtifactTitle>
                                 <ArtifactActions>
                                     <Button variant="ghost" size="sm" onClick={handleCancel} className="text-muted-foreground hover:text-foreground">취소</Button>
-                                    <Button size="sm" onClick={handleUpdate} disabled={loading} className="font-semibold px-6 bg-primary hover:bg-primary/90 shadow-md transition-all hover:scale-[1.02]">
+                                    <Button size="sm" onClick={handleUpdate} disabled={loading} className="font-semibold px-6 bg-primary hover:bg-primary/90 shadow-md transition-all hover:scale-[1.02] rounded-full">
                                         {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                                         {loading ? '수정 중...' : '수정 완료'}
                                     </Button>
