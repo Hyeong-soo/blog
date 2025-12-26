@@ -10,7 +10,7 @@ export default async function sitemap() {
         .eq('is_draft', false)
         .order('created_at', { ascending: false });
 
-    const baseUrl = 'https://intern-diary.vercel.app';
+    const baseUrl = 'https://internjournal.vercel.app';
 
     // 정적 페이지
     const staticPages = [

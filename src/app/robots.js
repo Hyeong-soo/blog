@@ -7,6 +7,6 @@ export default function robots() {
                 disallow: ['/api/', '/write', '/edit/', '/mypage'],
             },
         ],
-        sitemap: 'https://intern-diary.vercel.app/sitemap.xml',
+        sitemap: 'https://internjournal.vercel.app/sitemap.xml',
     };
 }
