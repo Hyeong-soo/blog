@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
+import { User } from "lucide-react";
 
 export default function AuthButton() {
     const [user, setUser] = useState(null);
@@ -36,13 +37,22 @@ export default function AuthButton() {
     };
 
     if (user) {
+        const userName = user.user_metadata?.name;
+        const displayName = userName ? `${userName} 인턴` : user.email?.split('@')[0];
+
         return (
-            <div className="flex items-center gap-4">
-                <span className="text-sm font-medium hidden sm:inline">{user.email}</span>
+            <div className="flex items-center gap-2">
+                <Link
+                    href="/mypage"
+                    className="flex items-center gap-2 text-sm font-medium hover:opacity-80 transition-opacity px-2 py-1 rounded-md hover:bg-primary-foreground/10"
+                >
+                    <User className="h-4 w-4" />
+                    <span className="hidden sm:inline">{displayName}</span>
+                </Link>
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="hover:text-primary-foreground/80"
+                    className="hover:bg-primary-foreground/10 text-primary-foreground hover:text-primary-foreground"
                     onClick={handleLogout}
                 >
                     로그아웃
@@ -52,7 +62,7 @@ export default function AuthButton() {
     }
 
     return (
-        <Button variant="ghost" size="sm" asChild className="hover:text-primary-foreground/80">
+        <Button variant="ghost" size="sm" asChild className="hover:bg-primary-foreground/10 text-primary-foreground hover:text-primary-foreground">
             <Link href="/login">
                 로그인
             </Link>

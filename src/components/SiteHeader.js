@@ -31,7 +31,7 @@ export function SiteHeader() {
                             <NavigationMenuItem>
                                 <NavigationMenuLink asChild className={cn(
                                     navigationMenuTriggerStyle(),
-                                    "bg-transparent hover:bg-transparent focus:bg-transparent text-primary-foreground/90 hover:text-primary-foreground text-sm font-medium transition-colors"
+                                    "bg-transparent hover:bg-primary-foreground/10 focus:bg-primary-foreground/10 text-primary-foreground hover:text-primary-foreground text-sm font-medium transition-all hover:opacity-80"
                                 )}>
                                     <Link href="/">
                                         홈
