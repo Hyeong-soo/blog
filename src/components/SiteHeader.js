@@ -12,7 +12,7 @@ import {
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import AuthButton from "@/components/AuthButton"
-import { BookOpen } from "lucide-react"
+import { Sprout } from "lucide-react"
 
 export function SiteHeader() {
     const pathname = usePathname()
@@ -22,7 +22,9 @@ export function SiteHeader() {
             <div className="container mx-auto px-4 h-14 flex items-center justify-between max-w-5xl">
                 <div className="flex items-center gap-6">
                     <Link href="/" className="flex items-center gap-2 text-lg font-bold tracking-tight hover:opacity-90 transition-opacity">
-                        <BookOpen className="h-5 w-5" />
+                        <div className="bg-primary-foreground/20 p-1.5 rounded-md">
+                            <Sprout className="h-4 w-4 text-primary-foreground" />
+                        </div>
                         <span>인턴일기</span>
                     </Link>
 
