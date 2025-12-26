@@ -71,9 +71,15 @@ export default async function JournalDetailPage({ params }) {
                         <CardTitle className="text-3xl font-bold leading-tight">
                             {journal.title}
                         </CardTitle>
-                        <Badge variant="default" className="w-fit text-sm px-3 py-1">
-                            Daily
-                        </Badge>
+                        {journal.is_draft ? (
+                            <Badge variant="secondary" className="w-fit text-sm px-3 py-1">
+                                임시저장
+                            </Badge>
+                        ) : (
+                            <Badge variant="default" className="w-fit text-sm px-3 py-1">
+                                Daily
+                            </Badge>
+                        )}
                     </div>
                     <CardDescription className="text-base text-muted-foreground">
                         {new Date(journal.created_at).toLocaleDateString()} • {new Date(journal.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -97,7 +103,7 @@ export default async function JournalDetailPage({ params }) {
                 <CardFooter className="bg-background mt-5 mb-0 mx-6 p-0 rounded-b-xl flex justify-between items-center text-sm text-muted-foreground">
                     <span>작성일: {new Date(journal.created_at).toLocaleDateString()}</span>
                     {/* Placeholder for future features like 'word count' or 'views' */}
-                    <span>기록 완료</span>
+                    <span>{journal.is_draft ? '임시저장됨' : '기록 완료'}</span>
                 </CardFooter>
             </Card>
         </div>

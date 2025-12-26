@@ -1,9 +1,5 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
-import { createClient } from '@/utils/supabase/client';
-import { useRouter } from 'next/navigation';
 import {
     Card,
     CardHeader,
@@ -13,27 +9,10 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit } from "lucide-react";
+import DeleteJournalButton from "@/components/DeleteJournalButton";
 
 export default function JournalCard({ journal }) {
-    const router = useRouter();
-    const supabase = createClient();
-
-    const handleDelete = async () => {
-        const confirmed = window.confirm('정말 삭제하시겠습니까?');
-        if (!confirmed) return;
-
-        const { error } = await supabase
-            .from('journals')
-            .delete()
-            .eq('id', journal.id);
-
-        if (error) {
-            alert('삭제 실패: ' + error.message);
-        } else {
-            router.refresh(); // Refresh page to remove deleted item
-        }
-    };
 
     return (
         <div className="relative group block h-full">
@@ -57,9 +36,16 @@ export default function JournalCard({ journal }) {
                 {/* Content Section - 60% width on desktop */}
                 <div className="flex flex-col w-full md:w-3/5">
                     <CardHeader className="p-6 pb-2">
-                        <CardTitle className="text-2xl font-bold leading-tight group-hover:text-primary transition-colors line-clamp-2">
-                            {journal.title}
-                        </CardTitle>
+                        <div className="flex items-start gap-2">
+                            <CardTitle className="text-2xl font-bold leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                                {journal.title}
+                            </CardTitle>
+                            {journal.is_draft && (
+                                <Badge variant="secondary" className="shrink-0 text-xs">
+                                    임시저장
+                                </Badge>
+                            )}
+                        </div>
                     </CardHeader>
 
                     <CardContent className="px-6 flex-grow">
@@ -80,14 +66,7 @@ export default function JournalCard({ journal }) {
                                     <Edit className="h-4 w-4" />
                                 </Link>
                             </Button>
-                            <Button
-                                variant="ghost"
-                                size="icon-sm"
-                                onClick={handleDelete}
-                                aria-label="삭제"
-                            >
-                                <Trash2 className="h-4 w-4" />
-                            </Button>
+                            <DeleteJournalButton journalId={journal.id} />
                         </div>
                     </CardFooter>
                 </div>

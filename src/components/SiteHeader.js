@@ -29,7 +29,7 @@ export function SiteHeader() {
                     <NavigationMenu>
                         <NavigationMenuList>
                             <NavigationMenuItem>
-                                <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "bg-transparent hover:bg-transparent focus:bg-transparent hover:text-primary-foreground focus:text-primary-foreground", pathname === "/" ? "text-primary-foreground font-semibold" : "text-primary-foreground/60")}>
+                                <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "bg-transparent hover:bg-transparent focus:bg-transparent text-primary-foreground hover:text-primary-foreground/60")}>
                                     <Link href="/">
                                         홈
                                     </Link>

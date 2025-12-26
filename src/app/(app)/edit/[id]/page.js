@@ -344,6 +344,7 @@ export default function EditPage() {
                 content,
                 thumbnail_url: thumbnailUrl,
                 conversation_id: conversationId,
+                is_draft: false, // Mark as published when saving
             })
             .eq('id', params.id);
 

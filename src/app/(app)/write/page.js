@@ -452,6 +452,7 @@ ${commitsSummary}
 
             // Redirect to home after successful save
             router.push('/');
+            router.refresh();
 
         } catch (error) {
             console.error('Error saving draft:', error.message || error);
