@@ -353,6 +353,20 @@ export default function WritePage() {
                 conversation_id: conversationId // Link message history
             };
 
+            // Save conversation FIRST (before journals, due to foreign key constraint)
+            const { error: convError } = await supabase
+                .from('conversations')
+                .upsert({
+                    id: conversationId,
+                    user_id: user.id,
+                    title: title || messages[0]?.content?.substring(0, 50) || 'New Conversation',
+                });
+
+            if (convError) {
+                console.error('Error saving conversation:', convError);
+                throw convError; // Stop if conversation save fails
+            }
+
             if (draftId) {
                 // Update existing draft
                 const { error } = await supabase
@@ -375,23 +389,11 @@ export default function WritePage() {
 
             setIsSaved(true);
 
-            // Save conversation mapping
-            const { error: convError } = await supabase
-                .from('conversations')
-                .upsert({
-                    id: conversationId,
-                    user_id: user.id,
-                    title: title || messages[0]?.content?.substring(0, 50) || 'New Conversation',
-                    // Optionally link to post if you have a post_id column in conversations
-                    // post_id: draftId || data.id 
-                });
-
-            if (convError) {
-                console.error('Error saving conversation:', convError);
-            }
-
             // Clear local storage on success
             localStorage.removeItem('diary-draft');
+
+            // Redirect to home after successful save
+            router.push('/');
 
         } catch (error) {
             console.error('Error saving draft:', error.message || error);
@@ -479,8 +481,8 @@ export default function WritePage() {
                                     </Suggestions>
                                 </div>
                             )}
-                            {messages.map((message) => (
-                                <div key={message.id}>
+                            {messages.map((message, idx) => (
+                                <div key={`${message.id}-${idx}`}>
                                     {/* Handle Sources */}
                                     {message.role === 'assistant' && message.parts?.filter((part) => part.type === 'source-url').length > 0 && (
                                         <Sources className="mb-2">
