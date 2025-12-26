@@ -25,7 +25,7 @@ import {
     PromptInputActionMenuContent,
     PromptInputActionAddAttachments
 } from "@/components/ai-elements/prompt-input";
-import { Send, Loader2, RefreshCcw, Copy, Trash2, FileEdit, Github, MessageCircle, FileText } from 'lucide-react';
+import { Send, Loader2, RefreshCcw, Copy, Trash2, FileEdit, Github, MessageCircle, FileText, Square } from 'lucide-react';
 import { Message, MessageContent, MessageResponse, MessageActions, MessageAction } from "@/components/ai-elements/message";
 import { Artifact, ArtifactHeader, ArtifactTitle, ArtifactActions, ArtifactContent } from "@/components/ai-elements/artifact";
 import {
@@ -197,7 +197,8 @@ export default function EditPage() {
         }
     });
 
-    const { messages: chatMessages, sendMessage, isLoading: isChatLoading, regenerate, setMessages } = chatHelpers;
+    const { messages: chatMessages, sendMessage, status, regenerate, setMessages, stop } = chatHelpers;
+    const isStreaming = status === 'streaming' || status === 'submitted';
 
     // Set messages when history is loaded
     useEffect(() => {
@@ -721,13 +722,26 @@ export default function EditPage() {
                                                 </PromptInputActionMenuContent>
                                             </PromptInputActionMenu>
                                         </PromptInputTools>
-                                        <PromptInputSubmit
-                                            status={isChatLoading ? 'streaming' : undefined}
-                                            disabled={isChatLoading}
-                                            className="rounded-xl"
-                                        >
-                                            <Send className="h-4 w-4" />
-                                        </PromptInputSubmit>
+                                        {isStreaming ? (
+                                            <Button
+                                                type="button"
+                                                size="icon"
+                                                variant="destructive"
+                                                onClick={stop}
+                                                className="rounded-xl h-9 w-9"
+                                                title="생성 중단"
+                                            >
+                                                <Square className="h-4 w-4 fill-current" />
+                                            </Button>
+                                        ) : (
+                                            <PromptInputSubmit
+                                                status={undefined}
+                                                disabled={false}
+                                                className="rounded-xl"
+                                            >
+                                                <Send className="h-4 w-4" />
+                                            </PromptInputSubmit>
+                                        )}
                                     </PromptInputFooter>
                                 </PromptInput>
                             </div>

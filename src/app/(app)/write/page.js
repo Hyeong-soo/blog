@@ -25,7 +25,7 @@ import {
     PromptInputActionMenuContent,
     PromptInputActionAddAttachments
 } from "@/components/ai-elements/prompt-input";
-import { Send, Loader2, RefreshCcw, Copy, Trash2, FileEdit, Github, MessageCircle, FileText } from 'lucide-react';
+import { Send, Loader2, RefreshCcw, Copy, Trash2, FileEdit, Github, MessageCircle, FileText, Square } from 'lucide-react';
 import { Message, MessageContent, MessageResponse, MessageActions, MessageAction } from "@/components/ai-elements/message";
 import { Sources, SourcesTrigger, SourcesContent, Source } from "@/components/ai-elements/sources";
 import { Reasoning, ReasoningTrigger, ReasoningContent } from "@/components/ai-elements/reasoning";
@@ -105,7 +105,8 @@ export default function WritePage() {
         }
     });
 
-    const { messages, sendMessage, isLoading: isChatLoading, setMessages, regenerate } = chatHelpers;
+    const { messages, sendMessage, status, setMessages, regenerate, stop } = chatHelpers;
+    const isStreaming = status === 'streaming' || status === 'submitted';
 
     // Check GitHub connection status on mount
     useEffect(() => {
@@ -544,25 +545,25 @@ ${commitsSummary}
                         <Conversation className="w-full">
                             <ConversationContent className="p-4 gap-8">
                                 {messages.length === 0 && (
-                                    <div className="flex-1 flex flex-col items-center justify-center gap-6 text-center p-8 mt-20">
+                                    <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center p-4 sm:p-8 mt-10 sm:mt-20">
                                         <div className="text-muted-foreground opacity-60 mb-2">
-                                            <p className="text-xl font-medium">무엇을 도와드릴까요?</p>
+                                            <p className="text-lg sm:text-xl font-medium">무엇을 도와드릴까요?</p>
                                         </div>
-                                        <Suggestions className="justify-center">
+                                        <Suggestions className="flex-col sm:flex-row justify-center w-full max-w-md sm:max-w-none gap-2">
                                             <Suggestion
-                                                className="bg-background/80 hover:bg-background shadow-xs border-muted-foreground/20"
-                                                suggestion="오늘의 TIL 작성해줘"
-                                                onClick={() => setInput("오늘의 TIL 작성해줘")}
+                                                className="bg-background/80 hover:bg-background shadow-xs border-muted-foreground/20 text-sm w-full sm:w-auto"
+                                                suggestion="오늘 내가 한 일을 알려줄게:"
+                                                onClick={() => setInput("오늘 내가 한 일을 알려줄게:")}
                                             />
                                             <Suggestion
-                                                className="bg-background/80 hover:bg-background shadow-xs border-muted-foreground/20"
-                                                suggestion="React 훅 설명해줘"
-                                                onClick={() => setInput("React 훅 설명해줘")}
+                                                className="bg-background/80 hover:bg-background shadow-xs border-muted-foreground/20 text-sm w-full sm:w-auto"
+                                                suggestion="오늘 쓴 일기 썸네일을 그려줘"
+                                                onClick={() => setInput("오늘 쓴 일기 썸네일을 그려줘")}
                                             />
                                             <Suggestion
-                                                className="bg-background/80 hover:bg-background shadow-xs border-muted-foreground/20"
-                                                suggestion="이력서 검토해줘"
-                                                onClick={() => setInput("이력서 검토해줘")}
+                                                className="bg-background/80 hover:bg-background shadow-xs border-muted-foreground/20 text-sm w-full sm:w-auto"
+                                                suggestion="오늘 느낀 점을 추가해줘:"
+                                                onClick={() => setInput("오늘 느낀 점을 추가해줘:")}
                                             />
                                         </Suggestions>
                                     </div>
@@ -930,13 +931,26 @@ ${commitsSummary}
                                             </PromptInputActionMenuContent>
                                         </PromptInputActionMenu>
                                     </PromptInputTools>
-                                    <PromptInputSubmit
-                                        status={isChatLoading ? 'streaming' : undefined}
-                                        disabled={isChatLoading}
-                                        className="rounded-xl"
-                                    >
-                                        <Send className="h-4 w-4" />
-                                    </PromptInputSubmit>
+                                    {isStreaming ? (
+                                        <Button
+                                            type="button"
+                                            size="icon"
+                                            variant="destructive"
+                                            onClick={stop}
+                                            className="rounded-xl h-9 w-9"
+                                            title="생성 중단"
+                                        >
+                                            <Square className="h-4 w-4 fill-current" />
+                                        </Button>
+                                    ) : (
+                                        <PromptInputSubmit
+                                            status={undefined}
+                                            disabled={false}
+                                            className="rounded-xl"
+                                        >
+                                            <Send className="h-4 w-4" />
+                                        </PromptInputSubmit>
+                                    )}
                                 </PromptInputFooter>
                             </PromptInput>
                         </div>
