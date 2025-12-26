@@ -102,7 +102,7 @@ export function PromptInputProvider({
   // ----- attachments state (global when wrapped)
   const [attachmentFiles, setAttachmentFiles] = useState([]);
   const fileInputRef = useRef(null);
-  const openRef = useRef(() => {});
+  const openRef = useRef(() => { });
 
   const add = useCallback((files) => {
     const incoming = Array.from(files);
@@ -539,7 +539,7 @@ export const PromptInput = ({
       }
     }
   }, // eslint-disable-next-line react-hooks/exhaustive-deps -- cleanup only on unmount; filesRef always current
-  [usingProvider]);
+    [usingProvider]);
 
   const handleChange = (event) => {
     if (event.currentTarget.files) {
@@ -580,9 +580,9 @@ export const PromptInput = ({
     const text = usingProvider
       ? controller.textInput.value
       : (() => {
-          const formData = new FormData(form);
-          return (formData.get("message")) || "";
-        })();
+        const formData = new FormData(form);
+        return (formData.get("message")) || "";
+      })();
 
     // Reset form immediately after capturing text to avoid race condition
     // where user input during async blob conversion would be lost
@@ -742,15 +742,15 @@ export const PromptInputTextarea = ({
 
   const controlledProps = controller
     ? {
-        value: controller.textInput.value,
-        onChange: (e) => {
-          controller.textInput.setInput(e.currentTarget.value);
-          onChange?.(e);
-        },
-      }
+      value: controller.textInput.value,
+      onChange: (e) => {
+        controller.textInput.setInput(e.currentTarget.value);
+        onChange?.(e);
+      },
+    }
     : {
-        onChange,
-      };
+      onChange,
+    };
 
   return (
     <InputGroupTextarea

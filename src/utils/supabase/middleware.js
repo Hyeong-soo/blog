@@ -48,16 +48,22 @@ export async function updateSession(request) {
         return redirectResponse
     }
 
-    if (
-        !user &&
-        !request.nextUrl.pathname.startsWith('/login') &&
-        !request.nextUrl.pathname.startsWith('/auth') &&
-        request.nextUrl.pathname !== '/'
-    ) {
-        // no user, potentially respond by redirecting the user to the login page
-        // const url = request.nextUrl.clone()
-        // url.pathname = '/login'
-        // return NextResponse.redirect(url)
+    // Protected routes: /write, /edit require authentication
+    const protectedPaths = ['/write', '/edit'];
+    const isProtectedPath = protectedPaths.some(path =>
+        request.nextUrl.pathname.startsWith(path)
+    );
+
+    if (!user && isProtectedPath) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/login'
+        url.searchParams.set('redirectTo', request.nextUrl.pathname)
+        const redirectResponse = NextResponse.redirect(url)
+        const allCookies = supabaseResponse.cookies.getAll()
+        allCookies.forEach(cookie => {
+            redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
+        })
+        return redirectResponse
     }
 
     // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're

@@ -1,16 +1,19 @@
 'use client';
 
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     const supabase = createClient();
+    const searchParams = useSearchParams();
+    const redirectTo = searchParams.get('redirectTo') || '/';
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -20,7 +23,7 @@ export default function LoginPage() {
         const { error } = await supabase.auth.signInWithOtp({
             email,
             options: {
-                emailRedirectTo: `${window.location.origin}/auth/callback`,
+                emailRedirectTo: `${window.location.origin}/auth/callback?redirectTo=${encodeURIComponent(redirectTo)}`,
             },
         });
 
@@ -37,6 +40,11 @@ export default function LoginPage() {
             <Card>
                 <CardHeader>
                     <CardTitle className="text-2xl text-center">로그인</CardTitle>
+                    {redirectTo !== '/' && (
+                        <CardDescription className="text-center">
+                            로그인 후 요청하신 페이지로 이동합니다
+                        </CardDescription>
+                    )}
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleLogin} className="space-y-4">
@@ -60,7 +68,7 @@ export default function LoginPage() {
                     </form>
 
                     {message && (
-                        <div className={`mt-4 p-3 rounded text-sm ${message.includes('에러') ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
+                        <div className={`mt-4 p-3 rounded-lg text-sm ${message.includes('에러') ? 'bg-destructive/10 text-destructive' : 'bg-primary/10 text-primary'}`}>
                             {message}
                         </div>
                     )}
