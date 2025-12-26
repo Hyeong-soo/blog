@@ -126,8 +126,8 @@ export default function MyPage() {
                             홈으로
                         </Link>
                     </Button>
-                    <h1 className="text-3xl font-bold tracking-tight">마이페이지</h1>
-                    <p className="text-muted-foreground mt-1">프로필과 연동 설정을 관리하세요</p>
+                    <h1 className="text-3xl font-bold tracking-tight">내 정보 ⚙️</h1>
+                    <p className="text-muted-foreground mt-1">인턴 프로필과 연동 설정을 관리해보세요</p>
                 </div>
 
                 <div className="space-y-6">
@@ -139,8 +139,8 @@ export default function MyPage() {
                                     <User className="h-5 w-5 text-primary" />
                                 </div>
                                 <div>
-                                    <CardTitle className="text-xl">인턴 프로필</CardTitle>
-                                    <CardDescription>당신의 인턴 정보를 입력하세요</CardDescription>
+                                    <CardTitle className="text-xl">나의 인턴 프로필</CardTitle>
+                                    <CardDescription>동료들에게 나를 소개해보세요</CardDescription>
                                 </div>
                             </div>
                         </CardHeader>
@@ -174,7 +174,7 @@ export default function MyPage() {
                                     id="company"
                                     value={company}
                                     onChange={(e) => setCompany(e.target.value)}
-                                    placeholder="예: Google DeepMind 인턴"
+                                    placeholder="예: 네이버 AI랩 인턴"
                                 />
                             </div>
                         </CardContent>
@@ -204,7 +204,7 @@ export default function MyPage() {
                                     </div>
                                     <div>
                                         <CardTitle className="text-xl">GitHub 연동</CardTitle>
-                                        <CardDescription>개발 일지에 커밋 내역을 가져옵니다</CardDescription>
+                                        <CardDescription>오늘 커밋한 내역을 자동으로 불러와요</CardDescription>
                                     </div>
                                 </div>
                                 {githubConnected ? (
@@ -266,7 +266,7 @@ export default function MyPage() {
                                     <div className="space-y-1">
                                         <p className="font-medium">GitHub 계정을 연결하세요</p>
                                         <p className="text-sm text-muted-foreground">
-                                            오늘의 커밋 내역을 개발 일지에 자동으로 추가할 수 있습니다
+                                            일기 작성 시 “오늘 커밋 불러오기” 버튼을 누르면 자동으로 커밋 내역이 추가돼요
                                         </p>
                                     </div>
                                     <Button onClick={handleConnectGithub} className="rounded-full gap-2">

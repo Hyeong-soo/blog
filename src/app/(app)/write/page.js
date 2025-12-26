@@ -537,7 +537,7 @@ ${commitsSummary}
                 {/* Left Column: AI Chat Agent */}
                 <div className={`flex-1 lg:w-1/2 h-full flex-col bg-background/60 backdrop-blur-sm relative min-w-0 lg:rounded-xl lg:shadow-sm lg:border lg:border-border/50 ${activeTab === 'chat' ? 'flex' : 'hidden lg:flex'}`}>
                     <div className="hidden lg:flex items-center p-4 border-b border-border/50 h-14 bg-background/50 lg:rounded-t-xl">
-                        <h1 className="text-lg font-semibold px-2 tracking-tight">일기 쓰기</h1>
+                        <h1 className="text-lg font-semibold px-2 tracking-tight">오늘의 일기 ✍️</h1>
                     </div>
 
                     {/* Chat Area (StickToBottom) */}
@@ -547,7 +547,7 @@ ${commitsSummary}
                                 {messages.length === 0 && (
                                     <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center p-4 sm:p-8 mt-10 sm:mt-20">
                                         <div className="text-muted-foreground opacity-60 mb-2">
-                                            <p className="text-lg sm:text-xl font-medium">무엇을 도와드릴까요?</p>
+                                            <p className="text-lg sm:text-xl font-medium">오늘 하루 어떠셨어요? 😊</p>
                                         </div>
                                         <Suggestions className="flex-col sm:flex-row justify-center w-full max-w-md sm:max-w-none gap-2">
                                             <Suggestion

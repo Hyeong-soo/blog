@@ -418,7 +418,7 @@ export default function EditPage() {
                     {/* Left Column: AI Chat Agent */}
                     <div className={`flex-1 lg:w-1/2 h-full flex-col bg-background/60 backdrop-blur-sm relative min-w-0 lg:rounded-xl lg:shadow-sm lg:border lg:border-border/50 ${activeTab === 'chat' ? 'flex' : 'hidden lg:flex'}`}>
                         <div className="hidden lg:flex items-center p-4 border-b border-border/50 h-14 bg-background/50 lg:rounded-t-xl">
-                            <h1 className="text-lg font-semibold px-2 tracking-tight">일기 수정하기</h1>
+                            <h1 className="text-lg font-semibold px-2 tracking-tight">일기 다듬기 ✨</h1>
                         </div>
 
                         {/* Chat Area */}

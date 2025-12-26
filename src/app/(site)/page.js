@@ -34,13 +34,13 @@ export default async function Home() {
           <div className="relative z-10 text-center space-y-6">
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-sm font-medium px-4 py-1.5 rounded-full">
               <Sparkles className="h-4 w-4" />
-              AI 기반 일기 작성
+              인턴의, 인턴에 의한, 인턴을 위한
             </div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-              나만의 일기를 시작해보세요
+              오늘 하루도 수고했어요 ✨
             </h1>
             <p className="text-muted-foreground text-lg max-w-md mx-auto">
-              AI가 도와주는 특별한 일기 작성 경험을 만나보세요. 개발 일지, TIL, 회고록을 손쉽게 기록하세요.
+              인턴 생활의 크고 작은 순간들을 기록하세요. AI가 당신의 성장을 함께 기록해드려요.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
               <Button size="lg" className="rounded-full px-8 shadow-lg hover:shadow-xl transition-all" asChild>
@@ -60,8 +60,8 @@ export default async function Home() {
       {/* Section Header */}
       <section className="flex items-center justify-between">
         <div className="space-y-1">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">오늘의 기록</h2>
-          <p className="text-muted-foreground text-sm">최근 작성된 일기를 확인하세요</p>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight">나의 인턴 일지 📝</h2>
+          <p className="text-muted-foreground text-sm">성장의 발자취를 확인해보세요</p>
         </div>
         {user && (
           <Button className="rounded-full shadow-sm gap-2" asChild>
@@ -86,11 +86,11 @@ export default async function Home() {
                 <PenLine className="h-8 w-8" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-xl font-semibold">아직 작성된 일지가 없어요</h3>
+                <h3 className="text-xl font-semibold">아직 기록이 없어요</h3>
                 <p className="text-muted-foreground max-w-sm mx-auto">
                   {user
-                    ? "오늘의 소중한 순간들을 기록해보세요. AI가 작성을 도와드립니다."
-                    : "로그인하고 AI와 함께 특별한 일기를 작성해보세요."
+                    ? "첫 출근의 설렘부터 퇴근 후의 회고까지, 인턴 생활의 모든 순간을 기록해보세요."
+                    : "로그인하고 나만의 인턴 성장 일기를 시작해보세요."
                   }
                 </p>
               </div>
@@ -98,7 +98,7 @@ export default async function Home() {
                 <Button size="lg" className="rounded-full px-8 shadow-md hover:shadow-lg transition-all gap-2" asChild>
                   <Link href="/write">
                     <PenLine className="h-4 w-4" />
-                    첫 번째 일기 쓰기
+                    첫 일기 작성하기
                   </Link>
                 </Button>
               ) : (

@@ -11,7 +11,7 @@ export default function SiteLayout({ children }) {
                 <div className="container mx-auto px-4 max-w-5xl">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
                         <p className="font-medium">© {new Date().getFullYear()} 인턴일기</p>
-                        <p>AI와 함께하는 스마트한 일기 작성</p>
+                        <p>오늘의 배움이 내일의 성장이 되도록 🌱</p>
                     </div>
                 </div>
             </footer>

@@ -19,6 +19,49 @@ import { ArrowLeft, Edit } from 'lucide-react'; // Assuming lucide-react is avai
 
 export const dynamic = 'force-dynamic';
 
+// 동적 SEO 메타데이터 생성
+export async function generateMetadata({ params }) {
+    const { id } = await params;
+    const supabase = await createClient();
+
+    const { data: journal } = await supabase
+        .from('journals')
+        .select('title, content, thumbnail_url, created_at')
+        .eq('id', id)
+        .single();
+
+    if (!journal) {
+        return {
+            title: '일기를 찾을 수 없습니다',
+        };
+    }
+
+    // content에서 HTML 태그 제거하고 설명 생성
+    const plainText = journal.content?.replace(/<[^>]*>/g, '') || '';
+    const description = plainText.slice(0, 160) + (plainText.length > 160 ? '...' : '');
+
+    return {
+        title: journal.title,
+        description: description || `${journal.title} - 인턴일기`,
+        openGraph: {
+            title: journal.title,
+            description: description || `${journal.title} - 인턴일기`,
+            type: 'article',
+            publishedTime: journal.created_at,
+            ...(journal.thumbnail_url && {
+                images: [{ url: journal.thumbnail_url, width: 1200, height: 630 }],
+            }),
+        },
+        twitter: {
+            card: journal.thumbnail_url ? 'summary_large_image' : 'summary',
+            title: journal.title,
+            description: description,
+            ...(journal.thumbnail_url && { images: [journal.thumbnail_url] }),
+        },
+    };
+}
+
+
 export default async function JournalDetailPage({ params }) {
     const { id } = await params;
     const supabase = await createClient();
