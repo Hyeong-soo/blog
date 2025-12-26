@@ -104,7 +104,6 @@ export default function EditPage() {
                 if (messagesError) {
                     console.error('Error fetching messages:', messagesError);
                 } else if (messages && messages.length > 0) {
-                    console.log('Loaded messages from DB:', messages);
                     // Convert DB messages to AI SDK format
                     const formattedMessages = messages.map((msg) => {
                         // For images, add as tool invocation part
@@ -163,8 +162,6 @@ export default function EditPage() {
                         };
                     });
                     setInitialMessages(formattedMessages);
-                } else {
-                    console.log('No messages found for conversation:', journal.conversation_id);
                 }
             }
 
@@ -198,7 +195,6 @@ export default function EditPage() {
     // Set messages when history is loaded
     useEffect(() => {
         if (isHistoryLoaded && initialMessages.length > 0 && chatMessages.length === 0) {
-            console.log('Setting initial messages:', initialMessages);
             setMessages(initialMessages);
         }
     }, [isHistoryLoaded, initialMessages, chatMessages.length, setMessages]);
@@ -221,13 +217,6 @@ export default function EditPage() {
 
     // Render line-based diff (git style)
     const renderDiff = (oldContent, newContent) => {
-        console.log('renderDiff debug:', {
-            oldLen: oldContent?.length,
-            newLen: newContent?.length,
-            oldPreview: oldContent?.substring(0, 20),
-            newPreview: newContent?.substring(0, 20)
-        });
-
         const oldLines = contentToLines(oldContent || '');
         const newLines = contentToLines(newContent || '');
 

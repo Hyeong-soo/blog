@@ -25,7 +25,7 @@ import {
     PromptInputActionMenuContent,
     PromptInputActionAddAttachments
 } from "@/components/ai-elements/prompt-input";
-import { Send, Loader2, RefreshCcw, Copy, Trash2, FileEdit } from 'lucide-react';
+import { Send, Loader2, RefreshCcw, Copy, Trash2, FileEdit, Github } from 'lucide-react';
 import { Message, MessageContent, MessageResponse, MessageActions, MessageAction } from "@/components/ai-elements/message";
 import { Sources, SourcesTrigger, SourcesContent, Source } from "@/components/ai-elements/sources";
 import { Reasoning, ReasoningTrigger, ReasoningContent } from "@/components/ai-elements/reasoning";
@@ -52,6 +52,11 @@ export default function WritePage() {
     const [draftId, setDraftId] = useState(null);
     const [showLeaveDialog, setShowLeaveDialog] = useState(false);
     const [showDiscardDialog, setShowDiscardDialog] = useState(false);
+
+    // GitHub Integration State
+    const [githubConnected, setGithubConnected] = useState(false);
+    const [githubUsername, setGithubUsername] = useState('');
+    const [fetchingCommits, setFetchingCommits] = useState(false);
 
     // Auth & Routing
     const router = useRouter();
@@ -93,19 +98,71 @@ export default function WritePage() {
             editorTitle: title,
         }),
         initialMessages: [],
-        onResponse: (response) => {
-            console.log('Chat Response Status:', response.status);
-            console.log('Chat Response Headers:', Object.fromEntries(response.headers.entries()));
-        },
-        onFinish: (message) => {
-            console.log('Chat Finished:', message);
-        },
         onError: (error) => {
             console.error('Chat Error:', error);
         }
     });
 
     const { messages, sendMessage, isLoading: isChatLoading, setMessages, regenerate } = chatHelpers;
+
+    // Check GitHub connection status on mount
+    useEffect(() => {
+        const checkGithubStatus = async () => {
+            try {
+                const response = await fetch('/api/github/status');
+                const data = await response.json();
+                setGithubConnected(data.connected);
+                if (data.username) setGithubUsername(data.username);
+            } catch (err) {
+                console.error('Error checking GitHub status:', err);
+            }
+        };
+        checkGithubStatus();
+    }, []);
+
+    // Handle GitHub commits fetch
+    const handleFetchGithubCommits = async () => {
+        if (!githubConnected) {
+            // Redirect to GitHub OAuth
+            window.location.href = '/api/github/auth';
+            return;
+        }
+
+        setFetchingCommits(true);
+        try {
+            const response = await fetch('/api/github/commits');
+            const data = await response.json();
+
+            if (data.error) {
+                console.error('Error fetching commits:', data.error);
+                alert('커밋을 가져오는데 실패했습니다: ' + data.error);
+                return;
+            }
+
+            if (data.commits.length === 0) {
+                alert('오늘 커밋 내역이 없습니다.');
+                return;
+            }
+
+            // Format commits for AI prompt
+            const commitsSummary = data.commits.map(c =>
+                `- [${c.repo.split('/')[1] || c.repo}] ${c.message}`
+            ).join('\n');
+
+            const prompt = `오늘 (${data.date}) 내가 한 GitHub 커밋들을 바탕으로 개발 일지를 작성해줘:
+
+${commitsSummary}
+
+총 ${data.totalCommits}개의 커밋, ${data.repositories.length}개의 레포지토리`;
+
+            setInput(prompt);
+        } catch (err) {
+            console.error('Error:', err);
+            alert('오류가 발생했습니다.');
+        } finally {
+            setFetchingCommits(false);
+        }
+    };
 
     // Load persisted state and history
     useEffect(() => {
@@ -819,7 +876,24 @@ export default function WritePage() {
                                 />
                             </PromptInputBody>
                             <PromptInputFooter className="justify-between p-2 border-t bg-muted/5">
-                                <PromptInputTools>
+                                <PromptInputTools className="gap-1">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={handleFetchGithubCommits}
+                                        disabled={fetchingCommits}
+                                        className="h-8 px-2 text-muted-foreground hover:text-foreground"
+                                        title={githubConnected ? `GitHub 연결됨 (${githubUsername})` : 'GitHub 연결하기'}
+                                    >
+                                        {fetchingCommits ? (
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                        ) : (
+                                            <Github className={`h-4 w-4 ${githubConnected ? 'text-green-500' : ''}`} />
+                                        )}
+                                        <span className="ml-1.5 text-xs hidden sm:inline">
+                                            {fetchingCommits ? '가져오는 중...' : githubConnected ? '개발일지' : 'GitHub'}
+                                        </span>
+                                    </Button>
                                     <PromptInputActionMenu>
                                         <PromptInputActionMenuTrigger />
                                         <PromptInputActionMenuContent>
